@@ -1,12 +1,11 @@
-# HJ_solver
-This is our repository for building accelerators used in solving Hamiltonian-Jacobi partial differential equation (PDE) on an extended 4D Dubins Car dynamic system. In here, you will find:
+# Hardware accelerator for Hamilton-Jacobi (HJ) Reachability analysis 
+This is our repository for building accelerators used in solving Hamilton-Jacobi partial differential equation (PDE) on an extended 4D Dubins Car dynamic system. (Note that if you just want to use our pre-built accelerator on AWS FPGA, please refer to the following page for more instructions). In here, you will find:
 
 1. Sources code in Chisel/Scala, documentation of the components in the accelerator architecture, how to compile, and running simulation to verify the hardware correctness
 
 2. Instructions on how to deploy our accelerator on an AWS F1 instance, and how to write a C++ driver and a Pybind wrapper around it that does end-to-end computation on FPGA.
 
-3. If you just want to use our pre-built accelerator on AWS FPGA. Please refer to the following page for more instructions.
-
+# Prerequisite Installation
 
 ## Getting Started on a Local Ubuntu Machine
 
