@@ -1,5 +1,12 @@
 # HJ_solver
-Accelerators for solving Hamiltonian-Jacobi partial differential equation (PDE) on a 4D Dubins Car system
+This is our repository for building accelerators used in solving Hamiltonian-Jacobi partial differential equation (PDE) on an extended 4D Dubins Car dynamic system. In here, you will find:
+
+1. Sources code in Chisel/Scala, documentation of the components in the accelerator architecture, how to compile, and running simulation to verify the hardware correctness
+
+2. Instructions on how to deploy our accelerator on an AWS F1 instance, and how to write a C++ driver and a Pybind wrapper around it that does end-to-end computation on FPGA.
+
+3. If you just want to use our pre-built accelerator on AWS FPGA. Please refer to the following page for more instructions.
+
 
 ## Getting Started on a Local Ubuntu Machine
 
@@ -63,7 +70,7 @@ Follow these instructions to compile it from source.
 
 ## HJ_solver's dependencies
 
-HJ_solver depends on _Berkeley Hardware Floating-Point Units_ for floating nodes. Therefore, before building HJ_solver you need to clone hardfloat project, build it and then publish it locally on your system. Hardfloat repository has all the necessary information about how to build the project, here we only briefly mention how to build it and then publish it.
+Our current accelerator is using fixed point for computation. However, some inherited packages from the Dandelion project depends on _Berkeley Hardware Floating-Point Units_ for floating nodes. Therefore, before building HJ_solver you need to clone hardfloat project, build it and then publish it locally on your system. Hardfloat repository has all the necessary information about how to build the project, here we only briefly mention how to build it and then publish it.
 
 ```
 git clone https://github.com/ucb-bar/berkeley-hardfloat.git
