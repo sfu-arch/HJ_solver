@@ -83,11 +83,11 @@ Run
 ```
 make TOP=HJsolverSimAccel
 ```
-This command generates an executable ending with ".so" that will be used by the simulator later. Also a large verilog file will also be generated residing in build/chisel. This file will be used as part of design files when we synthesize our design for AWS fpga.
+This command generates an executable ending with "libhw.so" that will be used by the simulator later. Also a verilog file HJsolverSimAccel.v will also be generated residing in build/chisel, which will be used as part of design files when we synthesize our design for AWS fpga.
 
 ## Simulation
 
-One of the easiest way to verify hardware correctness is to write a Python code that initializes data, passes them to the hardware simulation, reads return output and compares with the expected result. This is exactly what * **[muIR-Sim](https://github.com/sfu-arch/muir-sim)** * does for us, please refer to the page for installation instruction. Results obtained from the python toolbox for HJ reachability anaylsis such as * **[optimizedDP](https://github.com/SFU-MARS/optimized_dp)*** can be used to verify against the simulated FPGA result. 
+One of the easiest way to verify hardware correctness is to write a Python code that initializes data, passes them to the hardware simulation, reads return output and compares with the expected result. This is exactly what **[muIR-Sim](https://github.com/sfu-arch/muir-sim)** does for us, please refer to the page for installation instruction. Results obtained from the python toolbox for HJ reachability anaylsis such as **[optimizedDP](https://github.com/SFU-MARS/optimized_dp)** can be used to verify against the simulated FPGA result. 
 
 # Components explained
 
