@@ -1,7 +1,7 @@
 # Hardware accelerator for Hamilton-Jacobi (HJ) Reachability Analysis (README.md in progress)
 This is our repository for building accelerators used in solving Hamilton-Jacobi partial differential equation (PDE) on an extended 4D Dubins Car dynamic system, which is supplementary to our IROS 2021 paper "*Real-Time Hamilton-Jacobi Reachability Analysis of Autonomous System With An FPGA*". 
 
-Note that if you just want to use our pre-built accelerator on AWS FPGA, please refer to the following **[page](https://https://github.com/sfu-arch/HJ_solver/blob/main/USING_PREBUILT_IMAGE.md)** for more instructions. In here, you will find:
+Note that if you just want to use our pre-built accelerator on AWS FPGA, please refer to the following **[page](https://github.com/sfu-arch/HJ_solver/blob/main/USING_PREBUILT_IMAGE.md)** for more instructions. In here, you will find:
 
 1. Sources code in Chisel/Scala, documentation of the components in the accelerator architecture, how to compile, and running simulation to verify the hardware correctness
 
