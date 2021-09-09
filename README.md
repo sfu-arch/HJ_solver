@@ -105,7 +105,7 @@ This file contains RTL implementation of the processing element (PE as shown in 
 This file contains RTL implementation of the FIFO queues used in our memory architecture described in the paper. 
 
 ### Accelerator
-*/src/HJSolver_4D.scala*
+*/src/main/scala/stencil/HJSolver_4D.scala*
 
 This RTL files instantiates our previous memory buffer and processing elements appearing in the overall architecture. Currently, we are instantiating 4 PEs for parallizing the computation. In addtion, this file instantiates buffer queues for sending/receiving data from DRAM and contains the Finite State Machine (FSM) logic for issuing read and write commands to the arbiter modules. These interactions are illustrated in the figure below.
 ![Memory transfer](images/Memory_transfer.png)
