@@ -1,7 +1,7 @@
 # Hardware accelerator for Hamilton-Jacobi (HJ) Reachability Analysis (README.md in progress)
 This is our repository for building accelerators used in solving Hamilton-Jacobi partial differential equation (PDE) on an extended 4D Dubins Car dynamic system, which is supplementary to our IROS 2021 paper "*Real-Time Hamilton-Jacobi Reachability Analysis of Autonomous System With An FPGA*". 
 
-Note that if you just want to use our pre-built accelerator on AWS FPGA, please refer to the following **[page](https://github.com/sfu-arch/HJ_solver/blob/main/USING_PREBUILT_IMAGE.md)** for more instructions. In here, you will find:
+Note that if you just want to use our pre-built accelerator on AWS FPGA, please refer to the following **[section](#ready-to-use-accelerator-on-aws-fpga)** for more instructions. In here, you will find:
 
 1. Sources code in Chisel/Scala, documentation of the components in the accelerator architecture, how to compile, and running simulation to verify the hardware correctness
 
@@ -111,7 +111,7 @@ This RTL files instantiates our previous memory buffer and processing elements a
 ![Memory transfer](images/Memory_transfer.png)
 
 # Ready-to-use accelerator on AWS FPGA 
-Our pre-built Amazon FPGA Image (AFI) is **agfi-022913011f2080855**. Please note that this image is only available in the **US West (Oregon)** zone.
+Our pre-built Amazon FPGA Image (AFI) is **agfi-022913011f2080855**. This image is only available in the **US West (Oregon)** zone, and please note that the image is exactly as what is used in the experiment section of our paper, which works on a grid size of 60x60x20x36 and runs for exactly 67 iterations. We plan on parametrize these numbers at runtime in the future.
 
 Once an FPGA instance is obtained, you can follow the instructions on **[aws-fpga/hdk](https://github.com/aws/aws-fpga/tree/master/hdk)** to get the neccessary sofware, specifically step 4 through 5. 
 On step 5, you can load our image to FPGA running at 196Mhz using the following command:
@@ -126,7 +126,7 @@ First, on the FPGA instance, you need to clone the **[aws-fpga](https://github.c
 
 Let us explain what is happening in this code in more details. To correctly offload the specialized computation from the host program to the FPGA, the following information has to be shared between the host and the FPGA: input data addresses, output data addresses, when the computation should start, and when the computation has finished. On FPGA, these information are stored in a set of control registers that can be written and read by both host program and fpga’s custom logic. In particular, the design’s control registers include two write address registers, two read address registers, a cycle counter register and a launch register. The definitions of these control registers are defined in the file **src/main/scala/shell/DCRF1.scala**. In the host program, these registers’ addresses are mapped to the custom logic’s registers through the PCIe bus. By writing to these mapped addresses, we can interface to the custom logic design from our host program (shown in below figures). Control registers on FPGA can be accessed in C++ program by writing to PCI mapped addresses using function call fpga_pci_poke provided by AWS FPGA software library.
 
-<img src="images/register_address.png" width="200" height="150">
+<img src="images/register_address.png" width="260" height="200">
 
 ![another_image](images/pci_function_call.png)
 
