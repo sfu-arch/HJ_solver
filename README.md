@@ -110,8 +110,47 @@ This file contains RTL implementation of the FIFO queues used in our memory arch
 This RTL files instantiates our previous memory buffer and processing elements appearing in the overall architecture. Currently, we are instantiating 4 PEs for parallizing the computation. In addtion, this file instantiates buffer queues for sending/receiving data from DRAM and contains the Finite State Machine (FSM) logic for issuing read and write commands to the arbiter modules. These interactions are illustrated in the figure below.
 ![Memory transfer](images/Memory_transfer.png)
 
+# Ready-to-use accelerator on AWS FPGA 
+Our pre-built Amazon FPGA Image (AFI) is **agfi-022913011f2080855**. Please note that this image is only available in the **US West (Oregon)** zone.
+
+Once an FPGA instance is obtained, you can follow the instructions on **[aws-fpga/hdk](https://github.com/aws/aws-fpga/tree/master/hdk)** to get the neccessary sofware, specifically step 4 through 5. 
+On step 5, you can load our image to FPGA running at 196Mhz using the following command:
+```
+sudo fpga-load-local-image -S 0 -I agfi-022913011f2080855 -a 196
+```
+
+That's it ! We now have our design running on an FPGA. But we still need to do a bit more work in order to interface to the accelerator on FPGA from our host program
+
+# Writing codes that interact with FPGA
+First, on the FPGA instance, you need to clone the **[aws-fpga](https://github.com/aws/aws-fpga)** repo if you haven't already. We have provided a sample driver code **[test_hjsolver_dram.c](https://github.com/sfu-arch/HJ_solver/blob/main/test_hjsolver_dram.c)** here for your reference. For convenience, you can just copy paste the code into the folder **aws-fpga/hdk/cl/examples/cl_dram_dma/software/runtime/** and modify the Makefile accordingly to correctly compile our newly added file. ( Remember to link with test_dram_dma_common library )
+
+Let us explain what is happening in this code in more details. To correctly offload the specialized computation from the host program to the FPGA, the following information has to be shared between the host and the FPGA: input data addresses, output data addresses, when the computation should start, and when the computation has finished. On FPGA, these information are stored in a set of control registers that can be written and read by both host program and fpga’s custom logic. In particular, the design’s control registers include two write address registers, two read address registers, a cycle counter register and a launch register. The definitions of these control registers are defined in the file **src/main/scala/shell/DCRF1.scala**. In the host program, these registers’ addresses are mapped to the custom logic’s registers through the PCIe bus. By writing to these mapped addresses, we can interface to the custom logic design from our host program (shown in below figures). Control registers on FPGA can be accessed in C++ program by writing to PCI mapped addresses using function call fpga_pci_poke provided by AWS FPGA software library.
+
+<img src="images/register_address.png" width="200" height="150">
+
+![another_image](images/pci_function_call.png)
+
+To kickstart the computation on FPGA, the launch register is written 1 by the host program, and written 2 by the FPGA when the computation has finished. To determine if the computation on FPGA has finished, the host program will poll for the computation status on the FPGA by continuously evaluating the value of the launch register. 
+
+<img src="images/polling_code.png" width="570" height="95">
+
+Finally, input data from the host program can be written to the FPGA’s DRAM using DMA function calls, and output results on the FPGA side can be read back by the host program using the DMA burst read function.
+
+![image4](images/dma_read.png)
 
 
+<!---
+# Pybind wrapper for our code (optional)
+We have some example codes available at **[here](https://github.com/sudo-michael/jetracer_controller/tree/aws_controller/scripts)**
+
+You need  we need to build a Python executable from C++ codes 
+```
+g++ -I/home/centos/src/aws-fpga/sdk/userspace/include -O3 -std=c++11 -fPIC $(python3 -m pybind11 --includes) -c test_compile.cpp -o new_example.o
+
+// Link 
+g++ -DCONFIG_LOGLEVEL=4 -g -Wall -Werror -I/home/centos/src/aws-fpga/sdk/userspace/include -O3 -shared -std=c++11 -fPIC $(python3 -m pybind11 --includes) -o newexample$(python3-config --extension-suffix) new_example.o test_dram_dma_common.o -lfpga_mgmt -lm
+```
+--->
 
 
 
